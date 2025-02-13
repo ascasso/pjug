@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+    <head>
+        <title>[[#{ballInfo.list.headline}]]</title>
+    </head>
+    <body>
+        <div layout:fragment="content">
+            <div class="d-flex flex-wrap mb-4">
+                <h1 class="flex-grow-1">[[#{ballInfo.list.headline}]]</h1>
+                <div>
+                    <a th:href="@{/ballInfos/add}" class="btn btn-primary ms-2">[[#{ballInfo.list.createNew}]]</a>
+                </div>
+            </div>
+            <div th:if="${!ballInfoes.empty || filter != null}" class="row">
+                <div th:replace="~{fragments/utils::searchFilter(object='ballInfo')}" />
+                <div th:replace="~{fragments/utils::sorting(object='ballInfo', sortOptions=${ {'ballId,ASC', 'ballName,ASC', 'ballNumber,ASC'} }, columnClass='offset-lg-4')}" />
+            </div>
+            <div th:if="${ballInfoes.empty}">[[#{ballInfo.list.empty}]]</div>
+            <div th:if="${!ballInfoes.empty}" class="table-responsive">
+                <table class="table table-striped table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th scope="col">[[#{ballInfo.ballId.label}]]</th>
+                            <th scope="col">[[#{ballInfo.ballName.label}]]</th>
+                            <th scope="col">[[#{ballInfo.ballNumber.label}]]</th>
+                            <th scope="col">[[#{ballInfo.ballTime.label}]]</th>
+                            <th><!-- --></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="ballInfo : ${ballInfoes}">
+                            <td>[[${ballInfo.ballId}]]</td>
+                            <td>[[${ballInfo.ballName}]]</td>
+                            <td>[[${ballInfo.ballNumber}]]</td>
+                            <td>[[${ballInfo.ballTime}]]</td>
+                            <td>
+                                <div class="float-end text-nowrap">
+                                    <a th:href="@{/ballInfos/edit/{ballId}(ballId=${ballInfo.ballId})}" class="btn btn-sm btn-secondary">[[#{ballInfo.list.edit}]]</a>
+                                    <form th:action="@{/ballInfos/delete/{ballId}(ballId=${ballInfo.ballId})}"
+                                            th:hx-confirm="#{delete.confirm}" method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-secondary">[[#{ballInfo.list.delete}]]</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div th:replace="~{fragments/utils::pagination()}" />
+        </div>
+    </body>
+</html>

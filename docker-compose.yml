@@ -1,0 +1,27 @@
+services:
+  postgres:
+    image: postgres:17.2
+    environment:
+    - POSTGRES_DB=simple5
+    - POSTGRES_USER=postgres
+    - POSTGRES_PASSWORD=P4ssword!
+    ports:
+    - 5433:5432
+  redis:
+    image: redis:7.4-alpine
+    environment:
+    - REDIS_PASSWORD=P4ssword!
+    ports:
+    - 6380:6379
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0.4
+    environment:
+    - KEYCLOAK_ADMIN=admin
+    - KEYCLOAK_ADMIN_PASSWORD=P4ssword!
+    command:
+    - start-dev
+    - --import-realm
+    volumes:
+    - ./src/test/resources/keycloak-realm.json:/opt/keycloak/data/import/keycloak-realm.json
+    ports:
+    - 8085:8080
